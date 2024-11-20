@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CashApp Analysis Report</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
+    <!-- Include Bootswatch Darkly Theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/darkly/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
+
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Include Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #1e1e1e;
+        color: #ffffff;
+        overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+        }
+        .card {
+        background-color: #2b2b2b;
+        border: none;
+        margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #333333;
+            border-bottom: 1px solid #444444;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 220px;
+            padding-top: 20px;
+            background-color: #343a40;
+            overflow-y: auto;
+        }
+        .sidebar .nav-link {
+            color: #fff;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+        }
+        .sidebar .nav-link.active {
+            background-color: #495057;
+        }
+        .main-content {
+            margin-left: 221px; /* Adjust based on the width of the sidebar */
+            padding: 10px;
+        }
+        h1, h2 {
+            margin-top: 20px;
+            color: #ffffff;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        a {
+        color: #0d6efd;
+        text-decoration: none;
+        }
+        a:hover {
+            color: #0a58ca;
+        }
+        /* Optional: Customize the scrollbar for the sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #495057;
+            border-radius: 4px;
+        }
+        /* DataTables Styling for Dark Theme */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: #ffffff !important;
+        }
+
+        .dataTables_wrapper .dataTables_filter input,
+        .dataTables_wrapper .dataTables_length select {
+            background-color: #343a40;
+            color: #ffffff;
+            border: 1px solid #ced4da;
+        }
+
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_length label,
+        .dataTables_wrapper .dataTables_filter label {
+            color: #ffffff;
+        }
+        .datatable th:nth-child(1),
+        .datatable td:nth-child(1) {
+            min-width: 150px; /* Adjust the pixel value as needed */
+        }
+        .joined_data th:first-child, .joined_data td:first-child {
+        width: 150px; /* Adjust the width as needed */
+        }
+        /* Ensure tables are left-aligned */
+        .table {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        /* Custom CSS to align length changing input control and filtering input */
+        .dataTables_wrapper .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+<div class="sidebar">
+    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-3" href="#">
+        <img src="https://img1.wsimg.com/isteam/ip/465885ab-5c1e-4e10-875e-860693e89da6/nlconsulting-05.png" alt="Logo" width="30" height="30" class="me-2">
+        <span class="fs-5">CashApp Analysis Report</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="#case-info" class="nav-link active" aria-current="page">
+                <i class="fas fa-info-circle"></i> Case Information
+            </a>
+        </li>
+        <li>
+            <a href="#account-info" class="nav-link">
+                <i class="fas fa-user"></i> Account Information
+            </a>
+        </li>
+            <li>
+                <a href="#id-documents" class="nav-link">
+                    Identification Documents
+                </a>
+            </li>
+            <li>
+                <a href="#sender-data" class="nav-link">
+                    Sender Data
+                </a>
+            </li>
+            <li>
+                <a href="#recipient-data" class="nav-link">
+                    Recipient Data
+                </a>
+            </li>
+            <li>
+                <a href="#bitcoin-transactions" class="nav-link">
+                    Bitcoin Transactions
+                </a>
+            </li>
+            <li>
+                <a href="#ip-data" class="nav-link">
+                    IP Data
+                </a>
+            </li>
+            <li>
+                <a href="#joined-data" class="nav-link">
+                    Combined Transaction History
+                </a>
+            </li>
+            <li>
+                <a href="#associate-info" class="nav-link">
+                    Associate Details
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <!-- Search form or other content can be added here -->
+    </div>
+     
+    <!-- Main Content -->
+    <div class="main-content">       
+    <!-- Case Information Section -->
+    <div class="container mt-5">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2>Case Information</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Case Number:</strong> {{ case_info.case_number }}</p>
+                <p><strong>Case Name:</strong> {{ case_info.case_name }}</p>
+                <p><strong>Investigator Name:</strong> {{ case_info.investigator_name }}</p>
+                <p><strong>Additional Information:</strong> {{ case_info.additional_info }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Information Section -->
+    <div id="account-info" class="container mt-5">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-user"></i> Account Information</h2>
+            </div>
+            <div class="card-body">
+                {% if account_ids %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-dark">
+                        <tbody>
+                            {% for key, values in account_ids.items() %}
+                            <tr>
+                                <th>{{ key }}</th>
+                                <td>
+                                    {% if values %}
+                                        {% if values is iterable and not values is string %}
+                                            <ul>
+                                                {% for item in values %}
+                                                    <li>{{ item }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            {{ values }}
+                                        {% endif %}
+                                    {% else %}
+                                        <p>N/A</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center">No account information available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Identification Documents Section -->
+    <div id="id-documents" class="container-fluid">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-id-card"></i> Identification Documents</h2>
+            </div>
+            <div class="card-body text-center">
+                <div class="row">
+                    {% for photo in id_photos %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal{{ loop.index }}">
+                                <img src="{{ photo }}" class="img-thumbnail" alt="ID Photo">
+                            </a>
+                        </div>
+        
+                        <!-- Modal -->
+                        <div class="modal fade" id="modal{{ loop.index }}" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabel{{ loop.index }}">ID Photo</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="{{ photo }}" class="img-fluid" alt="ID Photo">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+    <!-- Sender Data Section -->
+    <div id="sender-data" class="container">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-paper-plane"></i> Sender Data</h2>
+            </div>
+            <div class="card-body">
+                {% if has_sender_data %}
+                <div class="table-responsive">
+                    {{ sender_data.to_html(
+                        classes="table table-hover table-bordered table-dark datatable",
+                        justify="left",
+                        index=False,
+                        escape=False
+                    ) | safe }}
+                </div>
+                {% else %}
+                <p>No sender data available.</p>
+                {% endif %}
+                {% if sender_chart %}
+                <div class="text-center mt-4">
+                    <img src="{{ sender_chart }}" class="img-fluid">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipient Data Section -->
+    <div id="recipient-data" class="container">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-user-friends"></i> Recipient Data</h2>
+            </div>
+            <div class="card-body">
+                {% if has_recipient_data %}
+                <div class="table-responsive">
+                    {{ recipient_data.to_html(
+                        classes="table table-hover table-bordered table-dark datatable",
+                        justify="left",
+                        index=False,
+                        escape=False
+                    ) | safe }}
+                </div>
+                {% else %}
+                <p>No recipient data available.</p>
+                {% endif %}
+                {% if recipient_chart %}
+                <div class="text-center mt-4">
+                    <img src="{{ recipient_chart }}" class="img-fluid">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Bitcoin Transactions Section -->
+    <div id="bitcoin-transactions" class="container">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-bitcoin"></i>Bitcoin Analysis</h2>
+            </div>
+            <div class="card-body">
+                {% if top_bitcoin_stats is not none %}
+                <div class="table-responsive">
+                    {{ top_bitcoin_stats.to_html(
+                        classes="table table-hover table-bordered table-dark datatable",
+                        justify="left",
+                        index=False,
+                        escape=False
+                    ) | safe }}
+                </div>
+                {% else %}
+                <p>No bitcoin transactions available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- IP Data Section -->
+    <div id="ip-data" class="container">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-globe"></i> Most Used IP Addresses</h2>
+            </div>
+            <div class="card-body">
+                {% if has_ip_data %}
+                <div class="table-responsive">
+                    {{ ip_data.to_html(classes="table table-hover table-bordered table-dark", justify="left", index=False) | safe }}
+                </div>
+                {% else %}
+                <p>No IP data available.</p>
+                {% endif %}
+                {% if ip_chart %}
+                <div class="text-center mt-4">
+                    <img src="{{ ip_chart }}" class="img-fluid">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Joined Data Section -->
+    <div id="joined-data" class="container">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h2><i class="fas fa-database"></i>Combined Transaction History</h2>
+            </div>
+            <div class="card-body">
+                {% if has_joined_data %}
+                <div class="table-responsive">
+                    {{ joined_data.to_html(classes="table table-hover table-bordered table-dark joined_data", justify="left", index=False, escape=False) | safe }}
+                </div>
+                {% else %}
+                <p>No transaction history available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Associate Account Information Section -->
+
+    <div id="associate-info" class="container my-4">
+        <div class="card bg-dark text-white">
+        <div class="card-header">
+            <h2><i class="fas fa-users"></i> Associate Details</h2>
+        </div>
+        <div class="card-body">
+            {% if associate_data %}
+            <div class="table-responsive">
+            <table id="associateTable" class="table table-hover table-bordered table-striped table-sm">
+                <thead>
+                <tr>
+                    {% for key in associate_data[0].keys() %}
+                    <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in associate_data %}
+                <tr>
+                    {% for value in row.values() %}
+                    <td>{{ value|safe }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% else %}
+            <p>No associate account information available.</p>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    <!-- Modals for Associate Account Information -->
+    {% for row in associate_data %}
+    <div class="modal fade" id="modal_{{ row['Sender ID'] }}" tabindex="-1" aria-labelledby="modalLabel_{{ row['Sender ID'] }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel_{{ row['Sender ID'] }}">Associate Account Information for {{ row.get('Name', 'N/A') }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for key, value in row.items() %}
+                        <li><strong>{{ key }}:</strong> {{ value|safe }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+</div>
+    
+
+    <!-- Footer -->
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-center">
+        <span>Created with <strong>Cash Crawler</strong> by <a href="https://northloopconsulting.com" target="_blank" class="text-white">North Loop Consulting, LLC</a></span>
+        <br>
+        <span>&copy; 2024 North Loop Consulting, LLC. All rights reserved.</span>
+    </div>
+</footer>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Image Modal Script -->
+    <script>
+    function setModalImage(src) {
+        document.getElementById('modalImage').src = src;
+    }
+    </script>
+
+    
+
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <!-- DataTables Buttons JS -->
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+    <!-- Initialize DataTables -->
+    <script>
+        $(document).ready(function() {
+            // Custom sorting function for currency columns
+            jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+                "currency-pre": function (a) {
+                    return parseFloat(a.replace(/[^0-9.-]/g, ''));
+                },
+                "currency-asc": function (a, b) {
+                    return a - b;
+                },
+                "currency-desc": function (a, b) {
+                    return b - a;
+                }
+        });
+        // Settings for the joined data table
+        $('.joined_data').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "order": [], // Disable initial sorting on any column
+            "language": {
+                "search": "Search:"
+            },
+            "responsive": true,
+            "dom": '<"top"lf>rt<"bottom"Bip><"clear">', // Add the buttons to the table
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "columnDefs": [
+                { "width": "900px", "targets": 0 }, // Adjust the index and width as needed
+                { "type": "currency", "targets": 2 }, // Custom currency sorting
+            ]
+        });
+    }); 
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#associateTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "pageLength": 10,
+                "lengthMenu": [10, 25, 50, 100],
+                "order": [], // Disable initial sorting on any column
+                "language": {
+                    "search": "Search:"
+                },
+                "responsive": true,
+                "dom": '<"top"lf>rt<"bottom"Bip><"clear">', // Add the buttons to the table
+                "buttons": [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    </script>
+    <script>
+        // Custom sorting function for currency columns
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "currency-pre": function (a) {
+                return parseFloat(a.replace(/[^0-9.-]/g, ''));
+            },
+            "currency-asc": function (a, b) {
+                return a - b;
+            },
+            "currency-desc": function (a, b) {
+                return b - a;
+            }
+        });
+        $(document).ready(function() {
+            $('.datatable').DataTable({
+                "ordering": true,
+                "paging": true,
+                "searching": true,
+                "columnDefs": [
+                    { "width": "900px", "targets": 0 }, // Adjust the index and width as needed
+                    { "type": "currency", "targets": 1 }, 
+                    { "type": "num", "targets": 2 },
+                    { "type": "currency", "targets": 3 }, 
+                    { "type": "currency", "targets": 4 }, 
+                    { "type": "currency", "targets": 5 }, 
+
+                    { "type": "html", "targets": "_all" }
+                ],
+                "language": {
+                    "search": "Search:",
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "No matching records found",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ records",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "dom": '<"top"lf>rt<"bottom"Bip><"clear">', // Add the buttons to the table
+                "buttons": [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
