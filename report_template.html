@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
     <!-- Include Bootswatch Darkly Theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/darkly/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -17,29 +17,17 @@
     <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
     <style>
         body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #1e1e1e;
-        color: #ffffff;
-        overflow-x: hidden;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-        }
-        .card {
-        background-color: #2b2b2b;
-        border: none;
-        margin-bottom: 20px;
-        }
-        .card-header {
-            background-color: #333333;
-            border-bottom: 1px solid #444444;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
         }
         .sidebar {
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
-            width: 220px;
+            width: 300px;
             padding-top: 20px;
             background-color: #343a40;
             overflow-y: auto;
@@ -54,22 +42,27 @@
             background-color: #495057;
         }
         .main-content {
-            margin-left: 221px; /* Adjust based on the width of the sidebar */
-            padding: 10px;
+            margin-left: 300px; /* Adjust based on the width of the sidebar */
+            padding: 20px; /* Add padding for consistent spacing */
+            flex-grow: 1; /* Allow the main content to take up the remaining space */
         }
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        
+
         h1, h2 {
             margin-top: 20px;
             color: #ffffff;
         }
+
+        .card-header h2 {
+            text-align: center; /* Center the title */
+        }
+
         .card {
             margin-bottom: 20px;
-        }
-        a {
-        color: #0d6efd;
-        text-decoration: none;
-        }
-        a:hover {
-            color: #0a58ca;
         }
         /* Optional: Customize the scrollbar for the sidebar */
         .sidebar::-webkit-scrollbar {
@@ -83,7 +76,6 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             color: #ffffff !important;
         }
-
         .dataTables_wrapper .dataTables_filter input,
         .dataTables_wrapper .dataTables_length select {
             background-color: #343a40;
@@ -101,7 +93,7 @@
             min-width: 150px; /* Adjust the pixel value as needed */
         }
         .joined_data th:first-child, .joined_data td:first-child {
-        width: 150px; /* Adjust the width as needed */
+        width: 100px; /* Adjust the width as needed */
         }
         /* Ensure tables are left-aligned */
         .table {
@@ -117,24 +109,25 @@
     </style>
 </head>
 <body>
+    <div class="flex-container">
     <!-- Sidebar -->
-<div class="sidebar">
-    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-3" href="#">
-        <img src="https://img1.wsimg.com/isteam/ip/465885ab-5c1e-4e10-875e-860693e89da6/nlconsulting-05.png" alt="Logo" width="30" height="30" class="me-2">
-        <span class="fs-5">CashApp Analysis Report</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="#case-info" class="nav-link active" aria-current="page">
-                <i class="fas fa-info-circle"></i> Case Information
-            </a>
-        </li>
-        <li>
-            <a href="#account-info" class="nav-link">
-                <i class="fas fa-user"></i> Account Information
-            </a>
-        </li>
+    <div class="sidebar">
+        <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-3" href="#">
+            <img src="your-logo.png" alt="Logo" width="30" height="30" class="me-2">
+            <span class="fs-5">CashApp Analysis Report</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#case-info" class="nav-link active" aria-current="page">
+                    Case Information
+                </a>
+            </li>
+            <li>
+                <a href="#account-info" class="nav-link">
+                    Account Information
+                </a>
+            </li>
             <li>
                 <a href="#id-documents" class="nav-link">
                     Identification Documents
@@ -178,7 +171,7 @@
     <!-- Main Content -->
     <div class="main-content">       
     <!-- Case Information Section -->
-    <div class="container mt-5">
+    <div id="case-info"  class="container mt-5">
         <div class="card bg-dark text-white">
             <div class="card-header">
                 <h2>Case Information</h2>
@@ -192,6 +185,7 @@
         </div>
     </div>
 
+    <!-- Account Information Section -->
     <!-- Account Information Section -->
     <div id="account-info" class="container mt-5">
         <div class="card bg-dark text-white">
@@ -232,9 +226,10 @@
             </div>
         </div>
     </div>
+                          
 
     <!-- Identification Documents Section -->
-    <div id="id-documents" class="container-fluid">
+    <div id="id-documents" class="container">
         <div class="card bg-dark text-white">
             <div class="card-header">
                 <h2><i class="fas fa-id-card"></i> Identification Documents</h2>
@@ -251,7 +246,7 @@
         
                         <!-- Modal -->
                         <div class="modal fade" id="modal{{ loop.index }}" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="modalLabel{{ loop.index }}">ID Photo</h5>
@@ -385,41 +380,50 @@
         </div>
     </div>
     
-    <!-- Associate Account Information Section -->
-
-    <div id="associate-info" class="container my-4">
-        <div class="card bg-dark text-white">
+   <!-- Associate Account Information Section -->
+<div id="associate-info" class="container my-4">
+    <div class="card bg-dark text-white">
         <div class="card-header">
             <h2><i class="fas fa-users"></i> Associate Details</h2>
         </div>
         <div class="card-body">
             {% if associate_data %}
             <div class="table-responsive">
-            <table id="associateTable" class="table table-hover table-bordered table-striped table-sm">
-                <thead>
-                <tr>
-                    {% for key in associate_data[0].keys() %}
-                    <th>{{ key }}</th>
-                    {% endfor %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for row in associate_data %}
-                <tr>
-                    {% for value in row.values() %}
-                    <td>{{ value|safe }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                <table id="associateTable" class="table table-hover table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            {% for key in associate_data[0].keys() %}
+                            <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in associate_data %}
+                        <tr>
+                            {% for key, value in row.items() %}
+                            <td>
+                                {% if key == 'Dates of Birth' or key == 'Social Security Numbers' or key == 'Aliases' %}
+                                    <ul>
+                                        {% for item in value.split(', ') %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {{ value|safe }}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% else %}
-            <p>No associate account information available.</p>
+            <p class="text-center">No associate account information available.</p>
             {% endif %}
         </div>
-        </div>
     </div>
+</div>
     <!-- Modals for Associate Account Information -->
     {% for row in associate_data %}
     <div class="modal fade" id="modal_{{ row['Sender ID'] }}" tabindex="-1" aria-labelledby="modalLabel_{{ row['Sender ID'] }}" aria-hidden="true">
@@ -440,6 +444,15 @@
         </div>
     </div>
     {% endfor %}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -577,15 +590,6 @@
                 "buttons": [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]
-            });
-        });
-    </script>
-    <script>
-        document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
             });
         });
     </script>
