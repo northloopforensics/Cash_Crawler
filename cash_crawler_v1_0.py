@@ -14,11 +14,7 @@ import sys
 import shutil
 
 # To Do List:
-# Bitcoin analysis - Common wallet used, biggest transactions, etc.
 
-
-# zip_path = '/Users/nlc/Downloads/pull-a274b372-8db5-44cd-8393-aadced64005d.zip'
-# zip_password = '1yytHs_4SeWWK48I9dEW0vz59vSAFjjXMUYNZL6owWQ'
 
 # Determine the base directory
 if getattr(sys, 'frozen', False):
@@ -63,13 +59,13 @@ def collect_associate_acct_info(reportrootdirectory):
             tokenname = os.path.basename(file).split('-')[4]
             tokenname = tokenname.split('.')[0]
             # print(f"Processing {tokenname} data...")
-            # try:
-            assoc_data = read_excel_datasets(file)
-            account_data = collect_account_data(assoc_data)
-            associate_data[tokenname] = account_data  # Store the account data in the dictionary
-            # except IndexError:
-            #     print(f"Error reading {tokenname} data. Index Error related to Excel sheet")
-            #     continue
+            try:
+                assoc_data = read_excel_datasets(file)
+                account_data = collect_account_data(assoc_data)
+                associate_data[tokenname] = account_data  # Store the account data in the dictionary
+            except IndexError:
+                print(f"Error reading {tokenname} data. Index Error related to Excel sheet")
+                continue
 
     return associate_data
 
@@ -336,77 +332,23 @@ def join_dataframes(dataframes):
 
     return joined_df
 
-#function to carry out Bitcoin transactions
-
-# def bitcoin_transactions(dataframes):
-#     if "Attempted Bitcoin Transactions" in dataframes:
-#         try:
-#             bitcoin_df = dataframes["Attempted Bitcoin Transactions"]
-#             # Check if either 'External Wallet Address' or 'Receiver's Wallet Address' column exists
-#             if 'External Wallet Address' in bitcoin_df.columns:
-#                 wallet_column = 'External Wallet Address'
-#             elif "Receiver’s Wallet Address" in bitcoin_df.columns:
-#                 wallet_column = "Receiver's Wallet Address"
-#             else:
-#                 raise KeyError("Neither 'External Wallet Address' nor 'Receiver's Wallet Address' column found in the 'Attempted Bitcoin Transactions' DataFrame.")
-
-#             # Print the column names for debugging
-#             print("Columns in bitcoin_df:", bitcoin_df.columns)
-#             # Ensure that 'Amount' and 'Date' columns exist
-#             if 'Amount' in bitcoin_df.columns and 'Date' in bitcoin_df.columns:
-#                 # Clean and convert the "Amount" column to numerical values
-#                 bitcoin_df['Amount'] = bitcoin_df['Amount'].astype(str)
-#                 bitcoin_df['Amount'] = bitcoin_df['Amount'].str.replace(
-#                     'BTC ', '', regex=False
-#                 ).str.replace(',', '', regex=False).astype(float)
-                
-#                 # Fill empty cells with a placeholder value
-#                 bitcoin_df[wallet_column] = bitcoin_df[wallet_column].fillna('No Wallet Address - Generally Indicates Purchase or Sale of Bitcoin')
-#                 bitcoin_df[wallet_column] = bitcoin_df[wallet_column].replace('', 'No Wallet Address - Generally Indicates Purchase or Sale of Bitcoin')
-
-#                 # Group by 'External Wallet Address' and calculate aggregates
-#                 bitcoin_group = bitcoin_df.groupby(wallet_column)
-#                 bitcoin_stats = bitcoin_group['Amount'].agg(
-#                     Total_Amount='sum', 
-#                     Number_of_Transactions='count',
-#                     Average_Transaction_Amount='mean',
-#                     Maximum_Transaction_Amount='max',
-#                     Minimum_Transaction_Amount='min'
-#                 ).reset_index()
-#                 # Sort by 'Total_Amount' in descending order while it's still numeric
-#                 bitcoin_stats = bitcoin_stats.sort_values(by='Total_Amount', ascending=False)
-#                 # Format amounts as currency AFTER sorting
-#                 for col in [
-#                     'Total_Amount', 'Average_Transaction_Amount',
-#                     'Maximum_Transaction_Amount', 'Minimum_Transaction_Amount' 
-#                 ]:
-#                     bitcoin_stats[col] = bitcoin_stats[col].apply(lambda x: f'BTC {x:,.8f}')
-#                 print("Bitcoin Stats:", bitcoin_stats)
-#                 return bitcoin_stats
-#         except KeyError as e:
-#             print(f"Error processing Bitcoin transactions: {e}")
-#             #return no data if an error occurs
-#             return pd.DataFrame()
-        
-#     else:
-#         #return no data if an error occurs
-#         return pd.DataFrame()
-
+          
 def bitcoin_transactions(dataframes):
     # Ensure the DataFrame for attempted Bitcoin transactions exists
     if 'Attempted Bitcoin Transactions' not in dataframes:
         raise KeyError("'Attempted Bitcoin Transactions' DataFrame not found in the provided dataframes.")
 
     df = dataframes['Attempted Bitcoin Transactions']
-
-    # Check if either 'External Wallet Address' or 'Receiver's Wallet Address' column exists
-    if 'External Wallet Address' in df.columns:
-        wallet_column = 'External Wallet Address'
-    elif "Receiver's Wallet Address" in df.columns:
-        wallet_column = "Receiver's Wallet Address"
-    else:
-        raise KeyError("Neither 'External Wallet Address' nor 'Receiver's Wallet Address' column found in the 'Attempted Bitcoin Transactions' DataFrame.")
-
+    df.columns = map(str, df.columns)
+    try:
+        # Check if either 'Wallet Address' is part of any column name
+        wallet_column = None
+        for column in df.columns:
+            if 'Wallet Address' in column:
+                wallet_column = column
+    except KeyError as e:
+        print(f"Error processing Bitcoin transactions: {e}")
+        return pd.DataFrame
     try:
         bitcoin_df = df.copy()
         # Remove 'BTC ' prefix and commas, then convert to float
@@ -612,9 +554,6 @@ def create_html_report(
     recipient_chart, ip_data, id_photos, output_path, joined_df, associate_data, case_info, top_bitcoin_stats
 ):
     current_year = datetime.datetime.now().year
-    # env = Environment(loader=FileSystemLoader('.'))
-    # template = env.get_template('report_template.html')
-    # Determine the base directory
     if getattr(sys, 'frozen', False):
         # If the application is frozen (e.g., packaged with PyInstaller)
         script_dir = os.path.dirname(sys.executable)
@@ -826,6 +765,7 @@ def process_folder_data():
     ip_data_df = read_ip_data(file_path)
     associate_data = collect_associate_acct_info(folder_path)
     formatted_associate_data = format_associate_data(associate_data)
+    print(formatted_associate_data)
     output_path = os.path.join(output_folder, 'report.html')
     create_html_report(
         account_ids=account_data,
