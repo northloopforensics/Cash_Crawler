@@ -874,7 +874,7 @@ ttk.Button(page0, text="Next", command=save_inputs_and_next).grid(row=5, column=
 # Page 1: Ask if the user has a ZIP file or a folder
 ttk.Label(page1, text="Select the data source for the CashApp production.").grid(row=0, column=0, columnspan=2, pady=20)
 # Center the buttons with icons and text
-ttk.Button(page1, text="ZIP File", image=zip_icon_img, compound="top", command=lambda: show_page(page2)).grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
+ttk.Button(page1, text="Encrypted ZIP File", image=zip_icon_img, compound="top", command=lambda: show_page(page2)).grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
 ttk.Button(page1, text="Folder", image=folder_icon_img, compound="top", command=lambda: show_page(page3)).grid(row=1, column=1, padx=20, pady=20, sticky="nsew")
 ttk.Button(page1, text="Back", command=lambda: show_page(page0)).grid(row=4, column=0, columnspan=3, pady=10)
 
