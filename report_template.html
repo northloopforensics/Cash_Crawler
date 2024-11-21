@@ -43,24 +43,19 @@
         }
         .main-content {
             margin-left: 300px; /* Adjust based on the width of the sidebar */
-            padding: 20px; /* Add padding for consistent spacing */
+            padding: 5px; /* Add padding for consistent spacing */
             flex-grow: 1; /* Allow the main content to take up the remaining space */
         }
         .table-responsive {
             overflow-x: auto;
         }
-
-        
-
         h1, h2 {
             margin-top: 20px;
             color: #ffffff;
         }
-
         .card-header h2 {
             text-align: center; /* Center the title */
         }
-
         .card {
             margin-bottom: 20px;
         }
@@ -104,7 +99,7 @@
         .dataTables_wrapper .top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: left;
         }
     </style>
 </head>
@@ -113,7 +108,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-3" href="#">
-            <img src="your-logo.png" alt="Logo" width="30" height="30" class="me-2">
+            <img src="https://img1.wsimg.com/isteam/ip/465885ab-5c1e-4e10-875e-860693e89da6/nlconsulting-05.png/:/rs=w:189,h:184,cg:true,m/cr=w:189,h:184/qt=q:95" alt="Logo" width="30" height="30" class="me-2">
             <span class="fs-5">CashApp Analysis Report</span>
         </a>
         <hr>
@@ -145,12 +140,12 @@
             </li>
             <li>
                 <a href="#bitcoin-transactions" class="nav-link">
-                    Bitcoin Transactions
+                    Bitcoin Analysis
                 </a>
             </li>
             <li>
                 <a href="#ip-data" class="nav-link">
-                    IP Data
+                    Most Used IP Addresses
                 </a>
             </li>
             <li>
@@ -445,23 +440,13 @@
     </div>
     {% endfor %}
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+
     
 
     <!-- Footer -->
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-center">
-        <span>Created with <strong>Cash Crawler</strong> by <a href="https://northloopconsulting.com" target="_blank" class="text-white">North Loop Consulting, LLC</a></span>
+        <span>Created with <strong>Cash Crawler</strong> from <a href="https://northloopconsulting.com" target="_blank" class="text-white">North Loop Consulting, LLC</a></span>
         <br>
         <span>&copy; 2024 North Loop Consulting, LLC. All rights reserved.</span>
     </div>
@@ -534,6 +519,14 @@
             $('#associateTable').DataTable({
                 "paging": true,
                 "searching": true,
+                "columnDefs": [
+                    { "width": "90px", "targets": 0 }, // Adjust the index and width as needed
+                    { "width": "200px", "targets": 1 },
+                    { "width": "100px", "targets": 2 },
+                    { "width": "90px", "targets": 3 },
+                    { "width": "230px", "targets": 4 },
+                    { "type": "html", "targets": "_all" }
+                ],
                 "ordering": true,
                 "info": true,
                 "pageLength": 10,
