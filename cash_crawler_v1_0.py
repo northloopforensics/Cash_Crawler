@@ -65,7 +65,7 @@ def collect_associate_acct_info(reportrootdirectory):
                 account_data = collect_account_data(assoc_data)
                 associate_data[tokenname] = account_data  # Store the account data in the dictionary
             except IndexError:
-                print(f"Error reading {tokenname} data. Index Error related to Excel sheet")
+                messagebox.ERROR(f"Error reading {tokenname} data. Index Error related to Excel sheet")
                 continue
 
     return associate_data
@@ -348,7 +348,7 @@ def bitcoin_transactions(dataframes):
             if 'Wallet Address' in column:
                 wallet_column = column
     except KeyError as e:
-        print(f"Error processing Bitcoin transactions: {e}")
+        messagebox.ERROR(f"Error processing Bitcoin transactions: {e}")
         return pd.DataFrame
     try:
         bitcoin_df = df.copy()
@@ -382,10 +382,10 @@ def bitcoin_transactions(dataframes):
         ]:
             bitcoin_stats[col] = bitcoin_stats[col].apply(lambda x: f'BTC {x:,.8f}')
         
-        print("Bitcoin Stats:", bitcoin_stats)
+        # print("Bitcoin Stats:", bitcoin_stats)
         return bitcoin_stats
     except KeyError as e:
-        print(f"Error processing Bitcoin transactions: {e}")
+        messagebox.ERROR(f"Error processing Bitcoin transactions: {e}")
     
 def sender_totals(dataframes):
     if "Attempted P2P Payments" in dataframes:
@@ -424,7 +424,7 @@ def sender_totals(dataframes):
             print("Columns 'Total' or 'Sender' not found in the dataset.")
             return pd.DataFrame()
     else:
-        print("Dataset 'Attempted P2P Payments' not found.")
+        messagebox.ERROR("Dataset 'Attempted P2P Payments' not found.")
         return pd.DataFrame()
     
 def plot_top_sender_totals(df):
@@ -746,7 +746,11 @@ def process_folder_data():
     os.makedirs(images_dir, exist_ok=True)
     file_path = find_excel_file(folder_path)
     if not file_path:
-        raise FileNotFoundError("No .xlsx file found in the folder")
+        messagebox.showerror(
+            "File Not Found",
+            "The folder provided does not appear to be structured as expected. No Excel file was found."
+        )
+        return  # Exit the function after showing the erro
     id_photos = find_ID_photos(folder_path)
     dataframes = read_excel_datasets(file_path)
     account_data = collect_account_data(dataframes)
@@ -766,7 +770,7 @@ def process_folder_data():
     ip_data_df = read_ip_data(file_path)
     associate_data = collect_associate_acct_info(folder_path)
     formatted_associate_data = format_associate_data(associate_data)
-    print(formatted_associate_data)
+    # print(formatted_associate_data)
     output_path = os.path.join(output_folder, 'report.html')
     create_html_report(
         account_ids=account_data,
