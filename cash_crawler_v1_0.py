@@ -15,18 +15,26 @@ import shutil
 
 # To Do List:
 
+def get_resource_path(relative_path):
+    """ Get the absolute path to the resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
+    return os.path.join(base_path, relative_path)
 # Determine the base directory
-if getattr(sys, 'frozen', False):
-    # If the application is frozen (e.g., packaged with PyInstaller)
-    script_dir = os.path.dirname(sys.executable)
-else:
-    # If the application is not frozen
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+# if getattr(sys, 'frozen', False):
+#     # If the application is frozen (e.g., packaged with PyInstaller)
+#     script_dir = os.path.dirname(sys.executable)
+# else:
+#     # If the application is not frozen
+#     script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Path to the template
-template_path = os.path.join(script_dir, 'report_template.html')
-
+# template_path = os.path.join(script_dir, 'report_template.html')
+template_path = get_resource_path('report_template.html')
 # Check if the template file exists
 if not os.path.exists(template_path):
     raise FileNotFoundError(f"Template file not found at {template_path}")
@@ -563,7 +571,8 @@ def create_html_report(
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Path to the template directory
-    template_dir = script_dir
+    # template_dir = script_dir
+    template_dir = get_resource_path('.')
 
     # Create a Jinja2 environment with the template directory
     env = Environment(loader=FileSystemLoader(template_dir))
