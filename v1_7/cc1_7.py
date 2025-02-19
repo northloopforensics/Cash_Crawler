@@ -1108,7 +1108,7 @@ def show_page(page):
 # Create the main application window
 style = Style(theme='darkly')  # Use the 'darkly' theme from ttkbootstrap
 root = style.master
-root.title("Cash Crawler v1.6")
+root.title("Cash Crawler v1.7")
 # Bind the window close event
 root.protocol("WM_DELETE_WINDOW", on_closing)
 # Variables to store input data
@@ -1149,7 +1149,7 @@ nlc_icon_label.grid(row=0, column=0, pady=20)
 # Existing Labels placed using grid
 ttk.Label(splashpage, text="Cash Crawler", font=('Impact', 36)).grid(row=1, column=0, pady=10)
 ttk.Label(splashpage, text="A CashApp Production Parser", font=('Helvetica', 16)).grid(row=2, column=0, pady=10)
-ttk.Label(splashpage, text="v1.6  ©2025 North Loop Consulting, LLC", font=('Helvetica', 14)).grid(row=3, column=0, pady=10)
+ttk.Label(splashpage, text="v1.7  ©2025 North Loop Consulting, LLC", font=('Helvetica', 14)).grid(row=3, column=0, pady=10)
 ttk.Label(splashpage, text="Loading...", font=('Helvetica', 16)).grid(row=4, column=0, pady=30)
 
 # Navigate to the next page after 3 seconds
